@@ -6,7 +6,7 @@
   "scripts": {
     "start": "set DEBUG=app & nodemon app.js",
     "debug": "set DEBUG=* & nodemon app.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "keywords": [],
   "author": "",
@@ -26,5 +26,8 @@
       "PORT": 3000
     }
   },
-  "type": "module"
+  "type": "module",
+  "devDependencies": {
+    "jest": "^29.7.0"
+  }
 }
