@@ -6,7 +6,7 @@
   "scripts": {
     "start": "set DEBUG=app & nodemon app.js",
     "debug": "set DEBUG=* & nodemon app.js",
-    "test": "jest"
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "keywords": [],
   "author": "",
@@ -29,5 +29,8 @@
   "type": "module",
   "devDependencies": {
     "jest": "^29.7.0"
+  },
+  "jest": {
+    "transform": {}
   }
 }
