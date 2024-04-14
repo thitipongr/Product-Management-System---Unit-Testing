@@ -41,7 +41,7 @@ productsRouter.route("/").post((req, res) => {
   const newProduct = {
     id: lastestId + 1,
     name: String(req.body.name),
-    category: String(req.body.category),
+    category: String(req.body.category || ""),
     price: Number(req.body.price),
     stock: Number(req.body.stock),
   };
