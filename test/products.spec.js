@@ -12,7 +12,7 @@ describe("List Products", () => {
 });
 
 describe("Create Products", () => {
-  it("create new products failure: empty name", async () => {
+  it("create new product failure: empty name", async () => {
     const response = await request
       .post("/products")
       .send({
@@ -25,7 +25,7 @@ describe("Create Products", () => {
     expect(response.text).toEqual("invalid body");
   });
 
-  it("create new products failure: empty price", async () => {
+  it("create new product failure: empty price", async () => {
     const response = await request
       .post("/products")
       .send({
@@ -38,7 +38,7 @@ describe("Create Products", () => {
     expect(response.text).toEqual("invalid body");
   });
 
-  it("create new products failure: NaN price", async () => {
+  it("create new product failure: NaN price", async () => {
     const response = await request
       .post("/products")
       .send({
@@ -51,7 +51,7 @@ describe("Create Products", () => {
     expect(response.text).toEqual("invalid body");
   });
 
-  it("create new products failure: NaN stock", async () => {
+  it("create new product failure: NaN stock", async () => {
     const response = await request
       .post("/products")
       .send({
@@ -68,14 +68,14 @@ describe("Create Products", () => {
     const response = await request
       .post("/products")
       .send({
-        name: "testProdustName",
+        name: "testProductName",
         category: "",
         price: 99,
         stock: 0,
       })
       .expect(200);
     const body = response.body;
-    expect(body.name).toEqual("testProdustName");
+    expect(body.name).toEqual("testProductName");
     expect(body.category).toEqual("");
     expect(body.price).toEqual(99);
     expect(body.stock).toEqual(0);
@@ -85,16 +85,25 @@ describe("Create Products", () => {
     const response = await request
       .post("/products")
       .send({
-        name: "testProdustName",
+        name: "testProductName",
         category: "testProductCategory",
         price: 99,
         stock: 0,
       })
       .expect(200);
     const body = response.body;
-    expect(body.name).toEqual("testProdustName");
+    expect(body.name).toEqual("testProductName");
     expect(body.category).toEqual("testProductCategory");
     expect(body.price).toEqual(99);
     expect(body.stock).toEqual(0);
+  });
+});
+
+describe("Update Products", () => {
+  it("update a product failure: search for an ID that doesn't exist.", async () => {
+    const response = await request
+      .put("/products/0")
+      .expect(200);
+    expect(response.text).toEqual("Product not found.");
   });
 });

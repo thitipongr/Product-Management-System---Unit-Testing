@@ -105,10 +105,10 @@ productsRouter.route("/:id").put((req, res) => {
     con.query(updateProduct_sql, (err) => {
       if (err) throw err;
       res.json({
-        name: req.body.name || oldData.name,
-        category: req.body.category || oldData.category,
-        price: req.body.price || oldData.price,
-        stock: req.body.stock || oldData.stock,
+        name: String(req.body.name) || oldData.name,
+        category: String(req.body.category) || oldData.category,
+        price: Number(req.body.price) || oldData.price,
+        stock: Number(req.body.stock) || oldData.stock,
       });
     });
   });
