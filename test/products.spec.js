@@ -22,7 +22,7 @@ describe("Create Products", () => {
         stock: "20",
       })
       .expect(200);
-    expect(response.text).toEqual("invalid body");
+    expect(response.text).toEqual("Invalid body.");
   });
 
   it("create new product failure: empty price", async () => {
@@ -35,7 +35,7 @@ describe("Create Products", () => {
         stock: "20",
       })
       .expect(200);
-    expect(response.text).toEqual("invalid body");
+    expect(response.text).toEqual("Invalid body.");
   });
 
   it("create new product failure: NaN price", async () => {
@@ -48,7 +48,7 @@ describe("Create Products", () => {
         stock: "20",
       })
       .expect(200);
-    expect(response.text).toEqual("invalid body");
+    expect(response.text).toEqual("Invalid body.");
   });
 
   it("create new product failure: NaN stock", async () => {
@@ -61,7 +61,7 @@ describe("Create Products", () => {
         stock: "testProductStock",
       })
       .expect(200);
-    expect(response.text).toEqual("invalid body");
+    expect(response.text).toEqual("Invalid body.");
   });
 
   it("create new product success: empty catrgory", async () => {
@@ -103,6 +103,32 @@ describe.only("Update Products", () => {
   it("update a product failure: search for an ID that doesn't exist.", async () => {
     const response = await request.put("/products/0").expect(200);
     expect(response.text).toEqual("Product not found.");
+  });
+
+  it("update a product failure: NaN price", async () => {
+    const response = await request
+      .put("/products/26")
+      .send({
+        name: "",
+        category: "",
+        price: "testProductPrice",
+        stock: "20",
+      })
+      .expect(200);
+    expect(response.text).toEqual("Invalid body.");
+  });
+
+  it("update a product failure: NaN category", async () => {
+    const response = await request
+      .put("/products/26")
+      .send({
+        name: "",
+        category: "",
+        price: "testProductPrice",
+        stock: "20",
+      })
+      .expect(200);
+    expect(response.text).toEqual("Invalid body.");
   });
 
   it("update a product success: all field empty", async () => {

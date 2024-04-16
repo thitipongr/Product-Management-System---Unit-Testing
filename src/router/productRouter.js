@@ -35,7 +35,7 @@ productsRouter.route("/").post((req, res) => {
     isNaN(req.body.stock)
   )
     // if นี้ สำหรับป้องกันไม่ให้ค่าที่จำเป็นถูกบันทึกเป็นค่าว่าง และส่วนที่เป็นตัวเลข ก็ต้องเป็นตัวเลขอย่างถูกต้อง
-    return res.send("invalid body"); // หากไม่เป็นไปตามกำหนด จะส่งข้อความว่า "invalid body"
+    return res.send("Invalid body."); // หากไม่เป็นไปตามกำหนด จะส่งข้อความว่า "Invalid body."
 
   // นำข้อมูลมารวมเป็นก้อนใหม่ ก่อนนำไปเก็บไว้ที่ตัวแปร product
   const newProduct = {
@@ -92,6 +92,10 @@ productsRouter.route("/:id").put((req, res) => {
     if (err) throw err;
 
     if (findIdResult.length === 0) return res.send("Product not found."); // หากไม่มี ก็แสดงข้อความแจ้ง
+
+    if (isNaN(req.body.price) || isNaN(req.body.stock))
+      // if นี้ สำหรับส่วนที่ต้องเป็นตัวเลข ก็ต้องเป็นตัวเลขอย่างถูกต้อง
+      return res.send("Invalid body."); // หากไม่เป็นไปตามกำหนด จะส่งข้อความว่า "Invalid body."
 
     const oldData = findIdResult[0];
 
