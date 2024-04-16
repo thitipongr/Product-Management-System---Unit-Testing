@@ -147,4 +147,38 @@ describe.only("Update Products", () => {
     expect(body.price).toEqual(99);
     expect(body.stock).toEqual(20);
   });
+
+  it("update a product success: empty name and category", async () => {
+    const response = await request
+      .put("/products/26")
+      .send({
+        name: "",
+        category: "",
+        price: 99,
+        stock: "20",
+      })
+      .expect(200);
+    const body = response.body;
+    expect(body.name).toEqual("testProductName");
+    expect(body.category).toEqual("testProductCategory");
+    expect(body.price).toEqual(99);
+    expect(body.stock).toEqual(20);
+  });
+
+  it("update a product success: got full body", async () => {
+    const response = await request
+      .put("/products/26")
+      .send({
+        name: "edited product name",
+        category: "edited category name",
+        price: 150,
+        stock: "200",
+      })
+      .expect(200);
+    const body = response.body;
+    expect(body.name).toEqual("testProductName");
+    expect(body.category).toEqual("testProductCategory");
+    expect(body.price).toEqual(150);
+    expect(body.stock).toEqual(200);
+  });
 });
