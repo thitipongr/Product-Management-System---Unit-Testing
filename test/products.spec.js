@@ -99,11 +99,26 @@ describe("Create Products", () => {
   });
 });
 
-describe("Update Products", () => {
+describe.only("Update Products", () => {
   it("update a product failure: search for an ID that doesn't exist.", async () => {
-    const response = await request
-      .put("/products/0")
-      .expect(200);
+    const response = await request.put("/products/0").expect(200);
     expect(response.text).toEqual("Product not found.");
+  });
+
+  it("update a product success: all field empty", async () => {
+    const response = await request
+      .put("/products/26")
+      .send({
+        name: "",
+        category: "",
+        price: "",
+        stock: "",
+      })
+      .expect(200);
+    const body = response.body;
+    expect(body.name).toEqual("testProductName");
+    expect(body.category).toEqual("testProductCategory");
+    expect(body.price).toEqual(99);
+    expect(body.stock).toEqual(20);
   });
 });
