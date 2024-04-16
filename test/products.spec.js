@@ -99,7 +99,7 @@ describe("Create Products", () => {
   });
 });
 
-describe.only("Update Products", () => {
+describe("Update Products", () => {
   it("update a product failure: search for an ID that doesn't exist.", async () => {
     const response = await request.put("/products/0").expect(200);
     expect(response.text).toEqual("Product not found.");
@@ -176,8 +176,25 @@ describe.only("Update Products", () => {
       })
       .expect(200);
     const body = response.body;
-    expect(body.name).toEqual("testProductName");
-    expect(body.category).toEqual("testProductCategory");
+    expect(body.name).toEqual("edited product name");
+    expect(body.category).toEqual("edited category name");
+    expect(body.price).toEqual(150);
+    expect(body.stock).toEqual(200);
+  });
+});
+
+describe("Delete product", () => {
+  it("delete a product failure", async () => {
+    const response = await request.delete("/products/0").expect(200);
+    expect(response.text).toEqual("Product not found.");
+  });
+
+  it.only("delete a product success", async () => {
+    const response = await request.delete("/products/26").expect(200);
+    const body = response.body;
+    expect(body.id).toEqual(26);
+    expect(body.name).toEqual("edited product name");
+    expect(body.category).toEqual("edited category name");
     expect(body.price).toEqual(150);
     expect(body.stock).toEqual(200);
   });
