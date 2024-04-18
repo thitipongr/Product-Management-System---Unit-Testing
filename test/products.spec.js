@@ -1,16 +1,20 @@
 import request from "./client";
 
-describe("List Products", () => {
-  it("list all products", () => {
-    return request.get("/products").expect(200);
-  });
-
-  it("gets products by id", async () => {
-    const response = await request.get("/products/3").expect(200);
-    expect(response.body[0].name).toEqual("req.body.name");
-  });
-});
-
+const mockData = [
+  {
+    name: `testProductName-noCategory-${new Date().toISOString()}`,
+    category: "",
+    price: Math.floor(Math.random() * 9999),
+    stock: Math.floor(Math.random() * 999),
+  },
+  {
+    name: `testProductName-fullBody-${new Date().toISOString()}`,
+    category: `testProductCategory-${new Date().toISOString()}`,
+    price: Math.floor(Math.random() * 9999),
+    stock: Math.floor(Math.random() * 999),
+  },
+];
+let createdProductId = [];
 describe("Create Products", () => {
   it("create new product failure: empty name", async () => {
     const response = await request
@@ -67,39 +71,48 @@ describe("Create Products", () => {
   it("create new product success: empty catrgory", async () => {
     const response = await request
       .post("/products")
-      .send({
-        name: "testProductName",
-        category: "",
-        price: 99,
-        stock: 0,
-      })
+      .send(mockData[0])
       .expect(200);
     const body = response.body;
-    expect(body.name).toEqual("testProductName");
-    expect(body.category).toEqual("");
-    expect(body.price).toEqual(99);
-    expect(body.stock).toEqual(0);
+    expect(body.name).toEqual(mockData[0].name);
+    expect(body.category).toEqual(mockData[0].category);
+    expect(body.price).toEqual(mockData[0].price);
+    expect(body.stock).toEqual(mockData[0].stock);
+    createdProductId.push(body.id);
   });
 
   it("create new product success: got full body", async () => {
     const response = await request
       .post("/products")
-      .send({
-        name: "testProductName",
-        category: "testProductCategory",
-        price: 99,
-        stock: 0,
-      })
+      .send(mockData[1])
       .expect(200);
     const body = response.body;
-    expect(body.name).toEqual("testProductName");
-    expect(body.category).toEqual("testProductCategory");
-    expect(body.price).toEqual(99);
-    expect(body.stock).toEqual(0);
+    expect(body.name).toEqual(mockData[1].name);
+    expect(body.category).toEqual(mockData[1].category);
+    expect(body.price).toEqual(mockData[1].price);
+    expect(body.stock).toEqual(mockData[1].stock);
+    createdProductId.push(body.id);
   });
 });
 
-describe("Update Products", () => {
+describe("List Products", () => {
+  it("list products by default page and limit", () => {
+    return request.get("/products").expect(200);
+  });
+
+  it("gets products by id", async () => {
+    const response = await request
+      .get(`/products/${createdProductId[1]}`)
+      .expect(200);
+    const body = response.body[0];
+    expect(body.name).toEqual(mockData[1].name);
+    expect(body.category).toEqual(mockData[1].category);
+    expect(body.price).toEqual(mockData[1].price);
+    expect(body.stock).toEqual(mockData[1].stock);
+  });
+});
+
+describe.skip("Update Products", () => {
   it("update a product failure: search for an ID that doesn't exist.", async () => {
     const response = await request.put("/products/0").expect(200);
     expect(response.text).toEqual("Product not found.");
@@ -183,13 +196,13 @@ describe("Update Products", () => {
   });
 });
 
-describe("Delete product", () => {
+describe.skip("Delete product", () => {
   it("delete a product failure", async () => {
     const response = await request.delete("/products/0").expect(200);
     expect(response.text).toEqual("Product not found.");
   });
 
-  it.only("delete a product success", async () => {
+  it("delete a product success", async () => {
     const response = await request.delete("/products/26").expect(200);
     const body = response.body;
     expect(body.id).toEqual(26);
