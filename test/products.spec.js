@@ -16,7 +16,7 @@ const mockData = [
 ];
 let createdProductId = [];
 describe("Create Products", () => {
-  it("create new product failure: empty name", async () => {
+  it("create new product failure: empty name.", async () => {
     const response = await request
       .post("/products")
       .send({
@@ -29,7 +29,7 @@ describe("Create Products", () => {
     expect(response.text).toEqual("Invalid body.");
   });
 
-  it("create new product failure: empty price", async () => {
+  it("create new product failure: empty price.", async () => {
     const response = await request
       .post("/products")
       .send({
@@ -42,7 +42,7 @@ describe("Create Products", () => {
     expect(response.text).toEqual("Invalid body.");
   });
 
-  it("create new product failure: NaN price", async () => {
+  it("create new product failure: NaN price.", async () => {
     const response = await request
       .post("/products")
       .send({
@@ -55,7 +55,7 @@ describe("Create Products", () => {
     expect(response.text).toEqual("Invalid body.");
   });
 
-  it("create new product failure: NaN stock", async () => {
+  it("create new product failure: NaN stock.", async () => {
     const response = await request
       .post("/products")
       .send({
@@ -68,7 +68,7 @@ describe("Create Products", () => {
     expect(response.text).toEqual("Invalid body.");
   });
 
-  it("create new product success: empty catrgory", async () => {
+  it("create new product success: empty catrgory.", async () => {
     const response = await request
       .post("/products")
       .send(mockData[0])
@@ -81,7 +81,7 @@ describe("Create Products", () => {
     createdProductId.push(body.id);
   });
 
-  it("create new product success: got full body", async () => {
+  it("create new product success: got full body.", async () => {
     const response = await request
       .post("/products")
       .send(mockData[1])
@@ -96,11 +96,28 @@ describe("Create Products", () => {
 });
 
 describe("List Products", () => {
-  it("list products by default page and limit", () => {
-    return request.get("/products").expect(200);
+  it("list products by default page and limit.", async () => {
+    const response = await request.get("/products").expect(200);
+    expect(response.body.length).toEqual(10);
   });
 
-  it("get products by id", async () => {
+  it("list products by custom page and limit.", async () => {
+    const page1Response = await request
+      .get("/products?page=1&limit=15")
+      .expect(200);
+    const page2Response = await request
+      .get("/products?page=2&limit=15")
+      .expect(200);
+    expect(page2Response.body.length).toEqual(15);
+    expect(page1Response).not.toEqual(page2Response);
+  });
+
+  it("get product that an ID that doesn't exist.", async () => {
+    const response = await request.get("/products/0").expect(200);
+    expect(response.text).toEqual("Product not found.");
+  });
+
+  it("get products by existing id.", async () => {
     const response = await request
       .get(`/products/${createdProductId[1]}`)
       .expect(200);
@@ -119,7 +136,7 @@ describe("Update Products", () => {
     expect(response.text).toEqual("Product not found.");
   });
 
-  it("update a product failure: NaN price", async () => {
+  it("update a product failure: NaN price.", async () => {
     const response = await request
       .put(`/products/${createdProductId[0]}`)
       .send({
@@ -132,7 +149,7 @@ describe("Update Products", () => {
     expect(response.text).toEqual("Invalid body.");
   });
 
-  it("update a product failure: NaN price", async () => {
+  it("update a product failure: NaN price.", async () => {
     const response = await request
       .put(`/products/${createdProductId[0]}`)
       .send({
@@ -145,7 +162,7 @@ describe("Update Products", () => {
     expect(response.text).toEqual("Invalid body.");
   });
 
-  it("update a product success: all field empty", async () => {
+  it("update a product success: all field empty.", async () => {
     const response = await request
       .put(`/products/${createdProductId[0]}`)
       .send({
@@ -163,7 +180,7 @@ describe("Update Products", () => {
     expect(body.stock).toEqual(mockData[0].stock);
   });
 
-  it("update a product success: empty name and category", async () => {
+  it("update a product success: empty name and category.", async () => {
     const response = await request
       .put(`/products/${createdProductId[0]}`)
       .send({
@@ -181,7 +198,7 @@ describe("Update Products", () => {
     expect(body.stock).toEqual(20);
   });
 
-  it("update a product success: got full body", async () => {
+  it("update a product success: got full body.", async () => {
     const response = await request
       .put(`/products/${createdProductId[0]}`)
       .send({
@@ -201,12 +218,12 @@ describe("Update Products", () => {
 });
 
 describe("Delete product", () => {
-  it("delete a product failure", async () => {
+  it("delete a product failure.", async () => {
     const response = await request.delete("/products/0").expect(200);
     expect(response.text).toEqual("Product not found.");
   });
 
-  it("delete a product success", async () => {
+  it("delete a product success.", async () => {
     const response = await request
       .delete(`/products/${createdProductId[1]}`)
       .expect(200);
