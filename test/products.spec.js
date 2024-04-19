@@ -112,7 +112,7 @@ describe("List Products", () => {
   });
 });
 
-describe.skip("Update Products", () => {
+describe("Update Products", () => {
   it("update a product failure: search for an ID that doesn't exist.", async () => {
     const response = await request.put("/products/0").expect(200);
     expect(response.text).toEqual("Product not found.");
@@ -120,7 +120,7 @@ describe.skip("Update Products", () => {
 
   it("update a product failure: NaN price", async () => {
     const response = await request
-      .put("/products/26")
+      .put(`/products/${createdProductId[0]}`)
       .send({
         name: "",
         category: "",
@@ -131,9 +131,9 @@ describe.skip("Update Products", () => {
     expect(response.text).toEqual("Invalid body.");
   });
 
-  it("update a product failure: NaN category", async () => {
+  it("update a product failure: NaN price", async () => {
     const response = await request
-      .put("/products/26")
+      .put(`/products/${createdProductId[0]}`)
       .send({
         name: "",
         category: "",
@@ -146,7 +146,7 @@ describe.skip("Update Products", () => {
 
   it("update a product success: all field empty", async () => {
     const response = await request
-      .put("/products/26")
+      .put(`/products/${createdProductId[0]}`)
       .send({
         name: "",
         category: "",
@@ -155,15 +155,16 @@ describe.skip("Update Products", () => {
       })
       .expect(200);
     const body = response.body;
-    expect(body.name).toEqual("testProductName");
-    expect(body.category).toEqual("testProductCategory");
-    expect(body.price).toEqual(99);
-    expect(body.stock).toEqual(20);
+    expect(body.id).toEqual(mockData[0].id);
+    expect(body.name).toEqual(mockData[0].name);
+    expect(body.category).toEqual(mockData[0].category);
+    expect(body.price).toEqual(mockData[0].price);
+    expect(body.stock).toEqual(mockData[0].stock);
   });
 
   it("update a product success: empty name and category", async () => {
     const response = await request
-      .put("/products/26")
+      .put(`/products/${createdProductId[0]}`)
       .send({
         name: "",
         category: "",
@@ -172,15 +173,16 @@ describe.skip("Update Products", () => {
       })
       .expect(200);
     const body = response.body;
-    expect(body.name).toEqual("testProductName");
-    expect(body.category).toEqual("testProductCategory");
+    expect(body.id).toEqual(mockData[0].id);
+    expect(body.name).toEqual(mockData[0].name);
+    expect(body.category).toEqual(mockData[0].category);
     expect(body.price).toEqual(99);
     expect(body.stock).toEqual(20);
   });
 
   it("update a product success: got full body", async () => {
     const response = await request
-      .put("/products/26")
+      .put(`/products/${createdProductId[0]}`)
       .send({
         name: "edited product name",
         category: "edited category name",
@@ -189,6 +191,7 @@ describe.skip("Update Products", () => {
       })
       .expect(200);
     const body = response.body;
+    expect(body.id).toEqual(mockData[0].id);
     expect(body.name).toEqual("edited product name");
     expect(body.category).toEqual("edited category name");
     expect(body.price).toEqual(150);
