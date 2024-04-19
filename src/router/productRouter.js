@@ -109,6 +109,7 @@ productsRouter.route("/:id").put((req, res) => {
     con.query(updateProduct_sql, (err) => {
       if (err) throw err;
       res.json({
+        id: oldData.id,
         name: String(req.body.name) || oldData.name,
         category: String(req.body.category) || oldData.category,
         price: Number(req.body.price) || oldData.price,

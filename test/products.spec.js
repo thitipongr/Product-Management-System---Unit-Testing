@@ -100,11 +100,12 @@ describe("List Products", () => {
     return request.get("/products").expect(200);
   });
 
-  it("gets products by id", async () => {
+  it("get products by id", async () => {
     const response = await request
       .get(`/products/${createdProductId[1]}`)
       .expect(200);
     const body = response.body[0];
+    expect(body.id).toEqual(createdProductId[1]);
     expect(body.name).toEqual(mockData[1].name);
     expect(body.category).toEqual(mockData[1].category);
     expect(body.price).toEqual(mockData[1].price);
@@ -155,7 +156,7 @@ describe("Update Products", () => {
       })
       .expect(200);
     const body = response.body;
-    expect(body.id).toEqual(mockData[0].id);
+    expect(body.id).toEqual(createdProductId[0]);
     expect(body.name).toEqual(mockData[0].name);
     expect(body.category).toEqual(mockData[0].category);
     expect(body.price).toEqual(mockData[0].price);
@@ -173,7 +174,7 @@ describe("Update Products", () => {
       })
       .expect(200);
     const body = response.body;
-    expect(body.id).toEqual(mockData[0].id);
+    expect(body.id).toEqual(createdProductId[0]);
     expect(body.name).toEqual(mockData[0].name);
     expect(body.category).toEqual(mockData[0].category);
     expect(body.price).toEqual(99);
@@ -191,7 +192,7 @@ describe("Update Products", () => {
       })
       .expect(200);
     const body = response.body;
-    expect(body.id).toEqual(mockData[0].id);
+    expect(body.id).toEqual(createdProductId[0]);
     expect(body.name).toEqual("edited product name");
     expect(body.category).toEqual("edited category name");
     expect(body.price).toEqual(150);
@@ -199,19 +200,33 @@ describe("Update Products", () => {
   });
 });
 
-describe.skip("Delete product", () => {
+describe("Delete product", () => {
   it("delete a product failure", async () => {
     const response = await request.delete("/products/0").expect(200);
     expect(response.text).toEqual("Product not found.");
   });
 
   it("delete a product success", async () => {
-    const response = await request.delete("/products/26").expect(200);
+    const response = await request
+      .delete(`/products/${createdProductId[1]}`)
+      .expect(200);
     const body = response.body;
-    expect(body.id).toEqual(26);
-    expect(body.name).toEqual("edited product name");
-    expect(body.category).toEqual("edited category name");
-    expect(body.price).toEqual(150);
-    expect(body.stock).toEqual(200);
+    expect(body.id).toEqual(createdProductId[1]);
+    expect(body.name).toEqual(mockData[1].name);
+    expect(body.category).toEqual(mockData[1].category);
+    expect(body.price).toEqual(mockData[1].price);
+    expect(body.stock).toEqual(mockData[1].stock);
+
+    await request.delete(`/products/${createdProductId[0]}`);
+
+    const checkDeleteResult_0 = await request
+      .get(`/products/${createdProductId[0]}`)
+      .expect(200);
+    expect(checkDeleteResult_0.text).toEqual("Product not found.");
+
+    const checkDeleteResult_1 = await request
+      .get(`/products/${createdProductId[1]}`)
+      .expect(200);
+    expect(checkDeleteResult_1.text).toEqual("Product not found.");
   });
 });
